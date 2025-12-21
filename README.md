@@ -19,7 +19,21 @@ Projede Kaggle platformundan elde edilen [Vehicle Dataset from CarDekho](https:/
 
 ### Öznitelik Seçimi
 
-Orijinal veri setindeki 9 özellikten `Car_Name` ve `Kms_Driven` değişkenleri çıkarılmıştır. `Car_Name` sütunu çok sayıda benzersiz değer içerdiğinden kategorik dönüşüm için uygun bulunmamıştır. `Kms_Driven` değişkeni ise Backward Elimination sürecinde istatistiksel olarak anlamsız bulunarak elenmiştir. Final modelde 6 özellik kullanılmaktadır.
+Orijinal veri setinde 9 sütun bulunmaktadır: Car_Name, Year, Selling_Price (hedef), Present_Price, Kms_Driven, Fuel_Type, Seller_Type, Transmission, Owner.
+
+**Elenen özellikler (2 adet):**
+1. `Car_Name`: Çok sayıda benzersiz değer içerdiğinden kategorik dönüşüm için uygun bulunmamıştır.
+2. `Kms_Driven`: Backward Elimination sürecinde istatistiksel olarak anlamsız (p-value > 0.05) bulunmuştur.
+
+(Not: `Selling_Price` hedef değişkendir, input özelliği değildir.)
+
+**Kalan 6 giriş özelliği:**
+- **Sayısal (3):** Year, Present_Price, Owner
+- **Kategorik (3):** Fuel_Type, Seller_Type, Transmission
+
+One-Hot Encoding ile kategorik değişkenler dummy değişkenlere dönüştürüldü (`drop_first=True` ile dummy variable trap önlendi). Final modelde kullanılan 6 özellik:
+- **Sayısal:** Year, Present_Price, Owner
+- **Dummy:** Fuel_Type_Diesel, Seller_Type_Individual, Transmission_Manual
 
 ### Kayıp Veri Analizi
 
@@ -35,9 +49,15 @@ Veri setinde üç kategorik değişken bulunmaktadır: `Fuel_Type`, `Seller_Type
 
 ## 2. Backward Elimination
 
-Özellik seçimi için statsmodels kütüphanesinin OLS modeli kullanılmıştır. İlk aşamada tüm özellikler modele dahil edilmiş ve p-value değerleri incelenmiştir. Belirlenen 0.05 anlamlılık eşiğinin üzerinde kalan `Fuel_Type_Petrol` değişkeni modelden çıkarılmıştır. Kalan tüm değişkenlerin p-value değerleri 0.05'in altında olduğundan eleme işlemi sonlandırılmıştır.
+Özellik seçimi için statsmodels kütüphanesinin OLS modeli kullanılmıştır. One-Hot Encoding sonrası tüm 6 özellik modele dahil edilmiş ve p-value değerleri incelenmiştir. Belirlenen 0.05 anlamlılık eşiğinin üzerinde kalan `Fuel_Type_Petrol` değişkeni modelden çıkarılmıştır (dummy variable trap'tan kaçınmak için zaten bırakılmıştı). Kalan tüm değişkenlerin p-value değerleri 0.05'in altında olduğundan eleme işlemi sonlandırılmıştır.
 
-Final modelde kullanılan özellikler: `Year`, `Present_Price`, `Owner`, `Fuel_Type_Diesel`, `Seller_Type_Individual`, `Transmission_Manual`
+**Final modelde kullanılan özellikler (6 adet):**
+1. Year
+2. Present_Price
+3. Owner
+4. Fuel_Type_Diesel
+5. Seller_Type_Individual
+6. Transmission_Manual
 
 ## 3. Model Kurulumu ve Değerlendirme
 
@@ -55,6 +75,7 @@ R² değeri 0.8473 olarak elde edilmiştir. Bu değer, modelin hedef değişkend
 ## 4. Flask Arayüz Uygulaması
 
 Eğitilen model `pickle` modülü ile `model.pkl` dosyasına, StandardScaler nesnesi ise `scaler.pkl` dosyasına kaydedilmiştir. Flask framework kullanılarak geliştirilen web arayüzü, kullanıcıdan model yılı, sıfır fiyatı, sahiplik durumu, yakıt türü, vites türü ve satıcı türü bilgilerini almaktadır. Girilen değerler scaler ile ölçeklendikten sonra model üzerinden tahmin üretilmekte ve sonuç ekranda gösterilmektedir.
+
 
 ## Ekran Görüntüleri
 
