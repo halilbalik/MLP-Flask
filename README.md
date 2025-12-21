@@ -56,34 +56,6 @@ R² değeri 0.8473 olarak elde edilmiştir. Bu değer, modelin hedef değişkend
 
 Eğitilen model `pickle` modülü ile `model.pkl` dosyasına, StandardScaler nesnesi ise `scaler.pkl` dosyasına kaydedilmiştir. Flask framework kullanılarak geliştirilen web arayüzü, kullanıcıdan model yılı, sıfır fiyatı, sahiplik durumu, yakıt türü, vites türü ve satıcı türü bilgilerini almaktadır. Girilen değerler scaler ile ölçeklendikten sonra model üzerinden tahmin üretilmekte ve sonuç ekranda gösterilmektedir.
 
-## Kurulum
-
-```
-git clone https://github.com/halilbalik/MLP_Flask.git
-cd MLP_Flask
-pip install -r requirements.txt
-python app.py
-```
-
-Uygulama `http://127.0.0.1:5000` adresinde çalışacaktır.
-
-## Dosya Yapısı
-
-```
-MLP_Flask/
-├── odev3.ipynb
-├── app.py
-├── model.pkl
-├── scaler.pkl
-├── feature_columns.json
-├── requirements.txt
-├── templates/
-│   └── index.html
-└── screenshots/
-    ├── flask_ui.png
-    └── prediction_result.png
-```
-
 ## Ekran Görüntüleri
 
 ### Ana Sayfa
